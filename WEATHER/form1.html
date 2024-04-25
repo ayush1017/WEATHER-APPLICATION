@@ -1,0 +1,226 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms</title>
+    <style>
+        /* .d{
+
+            display:"flex";
+            justify-content: "center";
+            align-items: center;
+            height: 100vh;
+            
+        } */
+    </style>
+</head>
+<body>
+    <form action="/weather" method="get">
+        <input type="text" id="1" placeholder="name"/><br>
+       
+        <button onclick="func()">Get Weather</button>
+    </form>
+
+    
+</body>
+<script>
+    const func=()=>{
+        fetchdata()
+    }
+    const fetchdata=async()=>{
+        const res=await fetch('/weather')
+        const data =await res.json();
+        const val=document.getElementById('1');
+
+        data.forEach(value => {
+            const div = document.createElement('div');
+            div.textContent = value;
+            val.appendChild(div);
+        });
+         
+
+    }
+
+</script>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forms</title>
+</head>
+<style>
+     body{
+        background: linear-gradient(109.6deg, rgb(6, 2, 2) 32.4%, rgb(137, 30, 47) 98.8%);
+        
+        /* background: linear-gradient(to right, #434343 0%, black 100%); */
+        /* background: linear-gradient(180.3deg, rgb(221, 221, 221) 5.5%, rgb(110, 136, 161) 90.2%); */
+        /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
+    
+        /* background: radial-gradient(circle at -1% 57.5%, rgb(19, 170, 82) 0%, rgb(0, 102, 43) 90%); */
+        height: 100vh;
+        background-position: relative;
+        background-repeat: no-repeat;
+       
+    }
+
+   #weatherForm{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 80px;
+   }
+   #weatherData{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-left: 35%;
+    /* height: 40%;
+    width: 40%; */
+    height: 350px;
+    width: 450px;
+    filter:drop-shadow(4px 4px 8px #999999)
+   
+   }
+   #butt{
+     padding: 10px;
+     border-radius: 10px;
+     cursor: pointer;
+     background: linear-gradient(109.6deg, rgba(0, 0, 0, 0.93) 11.2%, rgb(63, 61, 61) 78.9%);
+     color: cornsilk;
+   }
+   
+   #cityInput{
+    padding: 10px;
+    border-radius: 5px;
+   }
+   #mar{
+    font-size: 80px;
+    color: antiquewhite;
+    font-family: 'Times New Roman', Times, serif;
+   }
+</style>
+<body>
+    <marquee id="mar">WELCOME TO WEATHER FORECAST APP</marquee>
+    <form id="weatherForm">
+        <input type="text" id="cityInput" placeholder="Enter city name"/><br>
+        <button type="submit" id="butt">Get Weather</button><br><br>
+    </form>
+
+    <div id="weatherData"></div>
+
+    <script>
+        const weatherForm = document.getElementById('weatherForm');
+        const cityInput = document.getElementById('cityInput');
+        const weatherDataContainer = document.getElementById('weatherData');
+
+        weatherForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); // Prevent form submission
+            
+            const city = cityInput.value.trim();
+            if (!city) {
+                alert('Please enter a city name');
+                return;
+            }
+
+            try {
+                const response = await fetch(`/weather?city=${city}`);
+                const weatherData = await response.json();
+
+                // Clear previous data
+                weatherDataContainer.innerHTML = '';
+                var temp=weatherData.main.temp
+                var degree=(temp-32)*5/9
+                var degr=Math.round(degree)
+                // Display weather data
+                const div = document.createElement('h2');
+                div.textContent = `Temp:${degr}deg `;
+                
+                weatherDataContainer.appendChild(div);
+
+                const div1 = document.createElement('h2');
+                div1.textContent = `Main:${weatherData.weather[0].main}`;
+                weatherDataContainer.appendChild(div1);
+
+                const div2 = document.createElement('h2');
+                div2.textContent = `Desc:${weatherData.weather[0].description}`;
+                weatherDataContainer.appendChild(div2);
+
+                // const div3 = document.createElement('div');
+                // div3.textContent = weatherData.weather[0].icon;
+                // weatherDataContainer.appendChild(div3);
+
+                if(weatherData.weather[0].description=='overcast clouds'){
+                    weatherDataContainer.style.backgroundImage="url(https://images.pexels.com/photos/209831/pexels-photo-209831.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500)"
+                    weatherDataContainer.style.backgroundSize="cover"
+                    weatherDataContainer.style.borderRadius="30px"
+                    // weatherDataContainer.style.height="250px"
+                    // weatherDataContainer.style.width="350px"
+                    // weatherDataContainer.style.color="white"
+                  
+                   
+
+                    
+                }
+                if(weatherData.weather[0].description=='clear sky'){
+                    weatherDataContainer.style.backgroundImage="url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLw1TlNEAhPDuMLrK959nt83idWTdAYzgs521peRp75g&s)"
+                    weatherDataContainer.style.backgroundSize="cover"
+                    weatherDataContainer.style.borderRadius="30px"
+                    // weatherDataContainer.style.height="250px"
+                    // weatherDataContainer.style.width="350px"
+                    //weatherDataContainer.style.color="white"
+                    // weatherDataContainer.style.marginLeft='25%'
+                    
+                }
+                if(weatherData.weather[0].description=='few clouds'){
+                    weatherDataContainer.style.backgroundImage="url(https://media.istockphoto.com/id/1310822348/photo/deep-blue-sky-with-few-clouds.jpg?s=612x612&w=0&k=20&c=UxiIRlMol18myfu4oahDbOtTobwk-9j7djLGOkK6XTk=)"
+                    weatherDataContainer.style.backgroundSize="cover"
+                    weatherDataContainer.style.borderRadius="30px"
+                    // weatherDataContainer.style.height="250px"
+                    // weatherDataContainer.style.width="350px"
+                    // weatherDataContainer.style.color="white"
+                    // weatherDataContainer.style.marginLeft='25%'
+                    
+                }
+
+                if(weatherData.weather[0].description=='scattered clouds'||weatherData.weather[0].description=='broken clouds'){
+                    weatherDataContainer.style.backgroundImage="url(https://static.vecteezy.com/system/resources/previews/015/127/111/large_2x/scattered-clouds-in-the-sky-indicating-a-change-in-weather-free-photo.jpg)"
+                    weatherDataContainer.style.backgroundSize="cover"
+                    weatherDataContainer.style.borderRadius="30px"
+                    // weatherDataContainer.style.height="250px"
+                    // weatherDataContainer.style.width="350px"
+                   // weatherDataContainer.style.color="white"
+                    // weatherDataContainer.style.marginLeft='25%'
+                    
+                }
+               
+
+                if(weatherData.weather[0].description=='haze'){
+                    weatherDataContainer.style.backgroundImage="url( https://videohive.img.customer.envatousercontent.com/files/acb48142-eb01-49d1-b745-9dd46c9dfa9a/inline_image_preview.jpg?auto=compress%2Cformat&fit=crop&crop=top&max-h=8000&max-w=590&s=ee53a102b42a00ac9ebef67532b72a2a)"
+                    weatherDataContainer.style.backgroundSize="cover"
+                    weatherDataContainer.style.borderRadius="30px"
+                    // weatherDataContainer.style.height="250px"
+                    // weatherDataContainer.style.width="350px"
+                    //weatherDataContainer.style.color="white"
+                    // weatherDataContainer.style.marginLeft='25%'
+                    
+                }
+                
+
+               
+            
+            } catch (error) {
+                alert('Failed to fetch weather data');
+            }
+        });
+    </script>
+</body>
+</html>
